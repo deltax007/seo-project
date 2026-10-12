@@ -1,0 +1,187 @@
+{
+  "id": "ai-resume-screener",
+  "slug": "ai-resume-screener",
+  "title": "AI Resume Screening & Skill Matching Engine",
+  "shortDescription": "An end-to-end NLP pipeline parsing unstructured candidate resumes (PDF/DOCX), extracting technical skill entities, and computing cosine similarity against job descriptions with FastAPI.",
+  "difficulty": "Intermediate",
+  "projectTypes": ["Final Year", "Major", "Placement", "Resume"],
+  "primaryTechnologySlug": "machine-learning",
+  "technologySlugs": ["machine-learning", "python"],
+  "programmingLanguages": ["Python"],
+  "domains": ["EdTech", "HR Tech", "Enterprise Automation"],
+  "skillsLearned": [
+    "Natural Language Processing (NLP)",
+    "Named Entity Recognition (NER)",
+    "TF-IDF & Dense Embeddings",
+    "FastAPI Asynchronous Routing",
+    "Vector Similarity Scoring",
+    "PyMuPDF Document Parsing"
+  ],
+  "problemStatement": "Modern corporate recruiting portals receive thousands of heterogeneous resumes per opening. Manual candidate screening causes severe evaluation delays, keyword-matching bias, and missed qualified candidates whose resumes use synonym terminology rather than literal exact strings.",
+  "objectives": [
+    "Build a robust file-parsing subsystem that reliably extracts plain text from varied PDF and DOCX document layouts.",
+    "Implement an entity-extraction pipeline that isolates technical skills, years of experience, and degrees without relying on brittle regex alone.",
+    "Vectorize candidate profiles and target job descriptions using dense text embeddings to evaluate conceptual semantic fit.",
+    "Provide a high-throughput, asynchronous REST API delivering scored match rankings and missing skill gap insights."
+  ],
+  "realWorldUseCase": "High-volume recruitment workflows at enterprise software companies, placement cells filtering candidates for specialized campus hiring drives, and automated job portal applicant pre-qualifiers.",
+  "architecture": {
+    "overview": "The system follows a modular pipeline architecture. The Ingestion Layer ingests resumes via FastAPI multipart endpoints and extracts raw text via PyMuPDF. The NLP Engine cleans the text, tokenizes, removes stopwords, and performs custom spaCy NER to extract hard technical skills and qualifications. The Vector Matcher converts candidate text and job descriptions into high-dimensional vectors, calculating cosine similarity. Results are persisted to SQLite/PostgreSQL with candidate rank scores.",
+    "diagramType": "ascii",
+    "diagramContent": "+-------------------------------------------------------------------------+\n|                        CLIENT / RECRUITER UI                            |\n+-------------------------------------------------------------------------+\n                                     | (PDF/DOCX Upload + Job Spec)\n                                     v\n+-------------------------------------------------------------------------+\n|                         FASTAPI INGESTION API                           |\n|               (Async Multipart Validation & Queueing)                   |\n+-------------------------------------------------------------------------+\n                                     |\n                                     v\n+-------------------------------------------------------------------------+\n|                        DOCUMENT EXTRACTION LAYER                        |\n|           (PyMuPDF / pdfplumber Text & Structure Normalizer)            |\n+-------------------------------------------------------------------------+\n                                     |\n                                     v\n+-------------------------------------------------------------------------+\n|                          NLP PROCESSING PIPELINE                        |\n|   - spaCy Named Entity Recognition (Skill & Education Extraction)       |\n|   - Tokenization & Lemmatization                                        |\n|   - Sentence-Transformers / TF-IDF Vectorizer                           |\n+-------------------------------------------------------------------------+\n                                     |\n                                     v\n+-------------------------------------------------------------------------+\n|                         MATCHING & SCORING ENGINE                       |\n|   - Cosine Similarity Computation (Candidate Vector vs Job Vector)      |\n|   - Skill Gap Penalty Matrix Calculation                                |\n+-------------------------------------------------------------------------+\n                                     |\n                                     v\n+-------------------------------------------------------------------------+\n|                       PERSISTENCE & RANKING STORE                       |\n|          (SQLite / PostgreSQL: Candidates, JobSpecs, MatchLogs)         |\n+-------------------------------------------------------------------------+"
+  },
+  "features": [
+    "Multi-format document ingestion supporting multi-page PDF and DOCX files.",
+    "Custom spaCy NER pipeline trained to recognize 500+ technology and tool taxonomy keywords.",
+    "Semantic similarity scoring returning percentage match and confidence intervals.",
+    "Actionable skill-gap feedback reporting missing prerequisites for candidate improvement.",
+    "FastAPI Swagger interactive documentation with sub-150ms parsing benchmarks."
+  ],
+  "modules": [
+    {
+      "name": "Document Parser Module",
+      "description": "Extracts raw streams from uploaded files, sanitizes special characters, handles two-column resume layouts, and removes boilerplate headers."
+    },
+    {
+      "name": "Entity Extractor Module",
+      "description": "Executes rule-based and machine-learned spaCy pipelines to identify programming languages, frameworks, databases, and certifications."
+    },
+    {
+      "name": "Similarity Scoring Engine",
+      "description": "Calculates both lexical TF-IDF overlap and semantic vector cosine distance, combining them into a weighted composite score."
+    },
+    {
+      "name": "REST API Controller",
+      "description": "Exposes endpoints for job description ingestion, candidate batch processing, and ranked candidate query retrieval."
+    }
+  ],
+  "databaseDesign": {
+    "databaseType": "Relational (SQLite / PostgreSQL)",
+    "description": "Stores candidates, structured extracted skill sets, posted job criteria, and scoring execution history.",
+    "tables": [
+      {
+        "name": "candidates",
+        "description": "Master record of processed applicants.",
+        "primaryKey": "id (UUID)",
+        "fields": ["id", "full_name", "email", "phone", "raw_text", "created_at"]
+      },
+      {
+        "name": "job_descriptions",
+        "description": "Target job criteria with required and optional skills.",
+        "primaryKey": "id (UUID)",
+        "fields": ["id", "title", "department", "raw_description", "required_skills", "created_at"]
+      },
+      {
+        "name": "match_results",
+        "description": "Computed compatibility scores between candidates and jobs.",
+        "primaryKey": "id (UUID)",
+        "fields": ["id", "candidate_id", "job_id", "similarity_score", "matched_skills", "missing_skills", "evaluated_at"]
+      }
+    ]
+  },
+  "apis": [
+    {
+      "endpoint": "/api/v1/resumes/upload",
+      "method": "POST",
+      "description": "Accepts multipart/form-data PDF resume and returns extracted text and candidate ID.",
+      "responseSample": "{\n  \"candidate_id\": \"9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d\",\n  \"status\": \"parsed\",\n  \"detected_skills\": [\"Python\", \"FastAPI\", \"Docker\", \"PostgreSQL\"]\n}"
+    },
+    {
+      "endpoint": "/api/v1/jobs/match/{job_id}",
+      "method": "POST",
+      "description": "Ranks uploaded candidates against the specified job description.",
+      "responseSample": "{\n  \"job_id\": \"e3b0c442-98fc-1c14-9afb-4c8996fb9242\",\n  \"rankings\": [\n    {\n      \"candidate_id\": \"9b1deb4d\",\n      \"score\": 88.5,\n      \"matched\": [\"Python\", \"FastAPI\"],\n      \"missing\": [\"Kubernetes\"]\n    }\n  ]\n}"
+    }
+  ],
+  "implementationGuide": [
+    {
+      "stepNumber": 1,
+      "title": "Document Parsing & Text Extraction Setup",
+      "instructions": "Set up a virtual environment and configure PyMuPDF (fitz) to read raw streams from PDF uploads, handling multi-column reading order.",
+      "codeSnippet": {
+        "language": "python",
+        "fileName": "extractor.py",
+        "code": "import fitz  # PyMuPDF\n\ndef extract_text_from_pdf(file_bytes: bytes) -> str:\n    doc = fitz.open(stream=file_bytes, filetype=\"pdf\")\n    text_blocks = []\n    for page in doc:\n        text_blocks.append(page.get_text(\"text\"))\n    return \"\\n\".join(text_blocks).strip()"
+      }
+    },
+    {
+      "stepNumber": 2,
+      "title": "Skill Entity Matching with spaCy PhraseMatcher",
+      "instructions": "Load an English spaCy model and initialize PhraseMatcher with pre-compiled technical terminology tokens to extract technology entities with zero false positives.",
+      "codeSnippet": {
+        "language": "python",
+        "fileName": "ner_pipeline.py",
+        "code": "import spacy\nfrom spacy.matcher import PhraseMatcher\n\nnlp = spacy.load(\"en_core_web_sm\")\nmatcher = PhraseMatcher(nlp.vocab, attr=\"LOWER\")\n\nTECH_SKILLS = [\"Python\", \"FastAPI\", \"Docker\", \"PostgreSQL\", \"PyTorch\", \"React\"]\npatterns = [nlp.make_doc(skill) for skill in TECH_SKILLS]\nmatcher.add(\"TECH_SKILLS\", patterns)\n\ndef extract_skills(text: str) -> list[str]:\n    doc = nlp(text)\n    matches = matcher(doc)\n    return sorted(list({doc[start:end].text for _, start, end in matches}))"
+      }
+    },
+    {
+      "stepNumber": 3,
+      "title": "Vector Similarity Engine & FastAPI Endpoint",
+      "instructions": "Implement cosine similarity computation using scikit-learn's TfidfVectorizer or sentence-transformers, exposed through an asynchronous FastAPI route.",
+      "codeSnippet": {
+        "language": "python",
+        "fileName": "main.py",
+        "code": "from fastapi import FastAPI, UploadFile, File\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.metrics.pairwise import cosine_similarity\n\napp = FastAPI(title=\"Resume Screening Engine\")\n\n@app.post(\"/api/v1/score\")\nasync def calculate_score(resume_text: str, job_text: str):\n    vectorizer = TfidfVectorizer(stop_words=\"english\")\n    tfidf_matrix = vectorizer.fit_transform([resume_text, job_text])\n    similarity = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]\n    return {\"match_score\": round(float(similarity) * 100, 2)}"
+      }
+    }
+  ],
+  "expectedOutput": "A production-tested FastAPI microservice that processes uploaded PDF resumes in under 200ms, outputs ranked candidate arrays with exact skill-match percentages, and generates formatted CSV/JSON summaries for recruiters.",
+  "futureImprovements": [
+    "Integrate multilingual resume parsing using sentence-transformers (paraphrase-multilingual-MiniLM-L12-v2).",
+    "Add OCR capabilities using Tesseract / PaddleOCR for scanned image resumes.",
+    "Implement asynchronous task queueing via Celery and Redis for handling large zip archives of thousands of resumes."
+  ],
+  "interviewQuestions": [
+    {
+      "category": "Basic",
+      "question": "What is the difference between keyword matching and semantic similarity in resume screening?",
+      "answer": "Keyword matching checks for exact string equality (e.g. searching for 'Node.js' misses 'NodeJS' or 'Express backend developer'). Semantic similarity converts words and sentences into high-dimensional vector embeddings, measuring conceptual proximity via cosine distance regardless of trivial spelling or phrasing variations."
+    },
+    {
+      "category": "Technical",
+      "question": "Why use TF-IDF alongside or in comparison to Transformer-based dense embeddings?",
+      "answer": "TF-IDF is extremely computationally efficient (sub-1ms per comparison) and gives high mathematical weight to rare technical acronyms (e.g. 'Kubernetes', 'gRPC'). Dense transformer embeddings excel at understanding broad descriptive context (e.g. 'led high-scale cloud migration'), but can sometimes smooth out specific hard tool names. A hybrid approach combines the precision of lexical scoring with the comprehension of dense embeddings."
+    },
+    {
+      "category": "Architecture",
+      "question": "How would you handle 10,000 resume uploads during a campus drive without crashing the server?",
+      "answer": "I would decouple ingestion from extraction using a producer-consumer message queue (e.g. RabbitMQ or Redis Streams). The upload endpoint immediately saves the file to object storage (like AWS S3 or MinIO), writes an ingestion task to the queue, and returns an HTTP 202 Accepted with a job token. Background worker processes scale independently to consume parsing jobs without blocking web server threads."
+    },
+    {
+      "category": "Placement",
+      "question": "How did you validate that your NLP parser does not produce false positives on section titles?",
+      "answer": "We implemented layout-aware filtering using bounding-box spatial coordinates from PyMuPDF. Text categorized as header blocks (based on font size and uppercase weight) is isolated from body experience descriptions, preventing section names like 'EDUCATION' or 'PROJECTS' from being tagged as skills."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Is this project suitable for a Final Year CSE major project?",
+      "answer": "Yes. It combines applied NLP, data parsing, machine learning evaluation metrics, and asynchronous backend engineering, providing plenty of depth for viva examinations and live demonstrations."
+    },
+    {
+      "question": "Can this project run entirely on a local machine without expensive GPUs?",
+      "answer": "Yes. Both spaCy CPU models (en_core_web_sm) and Scikit-Learn TF-IDF vectorizers run in milliseconds on standard laptops with 8GB RAM."
+    }
+  ],
+  "relatedProjectSlugs": ["banking-microservices", "collaborative-code-editor"],
+  "relatedBlogSlugs": ["how-to-choose-machine-learning-final-year-project"],
+  "publishedAt": "2026-02-01T10:00:00Z",
+  "updatedAt": "2026-09-28T14:00:00Z",
+  "lastReviewedAt": "2026-10-01T12:00:00Z",
+  "author": {
+    "id": "ananya-verma",
+    "name": "Ananya Verma",
+    "role": "Senior AI/ML Researcher & Curriculum Lead",
+    "bio": "AI practitioner specializing in NLP and recommendation pipelines."
+  },
+  "reviewer": {
+    "id": "rohit-sharma",
+    "name": "Rohit Sharma",
+    "role": "Principal Systems Architect",
+    "bio": "Former Staff Engineer at FinTech scaleups."
+  },
+  "seo": {
+    "metaTitle": "AI Resume Screening System - Final Year Machine Learning Project",
+    "metaDescription": "Step-by-step guide to building an AI Resume Screening engine with Python, spaCy, and FastAPI. Includes architecture diagrams, database schemas, and interview questions."
+  }
+}

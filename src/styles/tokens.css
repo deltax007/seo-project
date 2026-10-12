@@ -1,0 +1,91 @@
+/* Design Tokens: Startup-Grade Technology Platform Aesthetic */
+:root {
+  /* Color Palette - Neutrals & Surfaces */
+  --bg-primary: #0b0f19;
+  --bg-secondary: #111827;
+  --bg-surface: #151d30;
+  --bg-surface-hover: #1c263d;
+  --bg-elevated: #1e293b;
+  --bg-glass: rgba(17, 24, 39, 0.75);
+  
+  /* Borders */
+  --border-subtle: #1e293b;
+  --border-medium: #334155;
+  --border-focus: #6366f1;
+  --border-highlight: rgba(99, 102, 241, 0.3);
+
+  /* Typography Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #0b0f19;
+
+  /* Brand Accents */
+  --brand-primary: #6366f1;
+  --brand-primary-hover: #4f46e5;
+  --brand-secondary: #06b6d4;
+  --brand-accent: #8b5cf6;
+  --brand-glow: rgba(99, 102, 241, 0.15);
+
+  /* Semantic / Difficulty Badges */
+  --badge-beginner-bg: rgba(16, 185, 129, 0.12);
+  --badge-beginner-border: rgba(16, 185, 129, 0.3);
+  --badge-beginner-text: #34d399;
+
+  --badge-intermediate-bg: rgba(245, 158, 11, 0.12);
+  --badge-intermediate-border: rgba(245, 158, 11, 0.3);
+  --badge-intermediate-text: #fbbf24;
+
+  --badge-advanced-bg: rgba(236, 72, 153, 0.12);
+  --badge-advanced-border: rgba(236, 72, 153, 0.3);
+  --badge-advanced-text: #f472b6;
+
+  --badge-tech-bg: rgba(99, 102, 241, 0.1);
+  --badge-tech-border: rgba(99, 102, 241, 0.25);
+  --badge-tech-text: #a5b4fc;
+
+  /* Typography Scale */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.25rem;     /* 20px */
+  --text-2xl: 1.5rem;     /* 24px */
+  --text-3xl: 1.875rem;   /* 30px */
+  --text-4xl: 2.25rem;    /* 36px */
+  --text-5xl: 3rem;       /* 48px */
+
+  /* Spacing Scale */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* Border Radii */
+  --radius-sm: 0.375rem; /* 6px */
+  --radius-md: 0.5rem;   /* 8px */
+  --radius-lg: 0.75rem;  /* 12px */
+  --radius-xl: 1rem;     /* 16px */
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 25px -5px rgba(99, 102, 241, 0.3);
+
+  /* Container Max Widths */
+  --container-max: 1240px;
+  --reading-max: 760px;
+}

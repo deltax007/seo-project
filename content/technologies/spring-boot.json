@@ -1,0 +1,31 @@
+{
+  "id": "spring-boot",
+  "slug": "spring-boot",
+  "name": "Spring Boot",
+  "category": "java",
+  "categoryLabel": "Java Ecosystem",
+  "description": "Enterprise-standard Java framework for building cloud-native microservices, secure RESTful APIs, transactional banking applications, and scalable backend platforms.",
+  "icon": "server",
+  "officialDocsUrl": "https://spring.io/projects/spring-boot",
+  "featured": true,
+  "subTechnologies": ["Spring Security", "Spring Data JPA", "Spring Cloud", "Hibernate", "Microservices"],
+  "publishedAt": "2026-01-18T10:00:00Z",
+  "updatedAt": "2026-09-28T16:00:00Z",
+  "lastReviewedAt": "2026-10-01T09:00:00Z",
+  "author": {
+    "id": "rohit-sharma",
+    "name": "Rohit Sharma",
+    "role": "Principal Systems Architect & Placement Mentor",
+    "bio": "Former Staff Engineer at FinTech scaleups."
+  },
+  "reviewer": {
+    "id": "ananya-verma",
+    "name": "Ananya Verma",
+    "role": "Senior AI/ML Researcher & Curriculum Lead",
+    "bio": "AI practitioner specializing in NLP and recommendation pipelines."
+  },
+  "seo": {
+    "metaTitle": "Spring Boot Projects for Placements & Final Year CSE | Guide",
+    "metaDescription": "Production-ready Spring Boot projects for CSE placements and major submissions. Covers JWT auth, microservices, REST APIs, and database transactions."
+  }
+}

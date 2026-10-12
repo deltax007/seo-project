@@ -1,0 +1,158 @@
+{
+  "id": "collaborative-code-editor",
+  "slug": "collaborative-code-editor",
+  "title": "Real-Time Collaborative Code Editor & Runner",
+  "shortDescription": "Browser-based collaborative IDE supporting multi-user concurrent code editing via Operational Transformation (CRDT / Yjs), real-time WebSockets, Monaco Editor, and containerized code execution.",
+  "difficulty": "Intermediate",
+  "projectTypes": ["Portfolio", "Major", "Placement", "Resume"],
+  "primaryTechnologySlug": "react",
+  "technologySlugs": ["react"],
+  "programmingLanguages": ["TypeScript", "JavaScript", "Python"],
+  "domains": ["Developer Tools", "EdTech", "Real-Time Collaboration"],
+  "skillsLearned": [
+    "React & TypeScript Component State Management",
+    "WebSocket Protocols & Socket.io Room Partitioning",
+    "Conflict-Free Replicated Data Types (CRDTs)",
+    "Monaco Editor Integration (VS Code core)",
+    "Sandboxed Code Execution Architecture",
+    "Redis Pub/Sub Horizontal Scaling"
+  ],
+  "problemStatement": "Engineering teams and technical interviewers require synchronized, zero-latency code sharing where multiple developers edit the same file simultaneously without keystroke clobbering, race conditions, or editor desynchronization.",
+  "objectives": [
+    "Integrate Microsoft Monaco Editor into a React TypeScript interface supporting syntax highlighting for 10+ languages.",
+    "Implement real-time bidirectional synchronization over WebSockets with room isolation so each collaborative session remains private.",
+    "Resolve concurrent text edit conflicts gracefully using CRDTs (Conflict-Free Replicated Data Types).",
+    "Provide a secure code execution sandbox evaluating Python, JavaScript, and C++ code with strict timeout limits."
+  ],
+  "realWorldUseCase": "Live technical interview platforms (similar to CoderPad / HackerRank), remote pair-programming tools, and interactive computer science classroom environments.",
+  "architecture": {
+    "overview": "React client hosts the Monaco Editor connected via WebSocket to a Node.js signaling cluster. Text mutations are structured as Yjs CRDT operations, eliminating central conflict resolution bottlenecks. Redis Pub/Sub synchronizes messages across multiple Node.js socket server instances. A decoupled sandbox worker executes user-submitted code in disposable, resource-constrained Docker containers.",
+    "diagramType": "ascii",
+    "diagramContent": "+-----------------------+             +-----------------------+\n|    BROWSER CLIENT A   |             |    BROWSER CLIENT B   |\n|  (Monaco Editor + Yjs)|             |  (Monaco Editor + Yjs)|\n+-----------------------+             +-----------------------+\n            \\                                     /\n             \\ (WebSocket WSS)                   / (WebSocket WSS)\n              v                                 v\n+-------------------------------------------------------------+\n|                   NODE.JS / TYPESCRIPT GATEWAY              |\n|         (Socket.io Room Hub + Authentication Handshake)     |\n+-------------------------------------------------------------+\n                               |\n                               v\n+-------------------------------------------------------------+\n|                     REDIS PUB/SUB & STATE                   |\n|     - Room State Presence & Cursor Position Broadcasting    |\n|     - Active Collaboration Session Registry                 |\n+-------------------------------------------------------------+\n                               |\n                               v\n+-------------------------------------------------------------+\n|                 SANDBOXED CODE EXECUTION RUNNER             |\n|   - Isolated Docker Containers (CPU/RAM/Network Throttled)  |\n|   - Subprocess Execution with 5-Second Timeout Deadlines    |\n+-------------------------------------------------------------+"
+  },
+  "features": [
+    "Sub-50ms peer-to-peer keystroke synchronization using CRDT operational transforms.",
+    "Remote user cursor markers displaying peer username and cursor selections in real time.",
+    "Isolated room codes with password protection and link-sharing invites.",
+    "Sandboxed code runner evaluating Python 3 and Node.js with output capture and error reporting.",
+    "Customizable themes (Dark / Light) with font sizing and language mode toggles."
+  ],
+  "modules": [
+    {
+      "name": "Editor Frontend Core",
+      "description": "Wraps Monaco Editor, binding cursor position events, keydown listeners, and syntax highlight themes."
+    },
+    {
+      "name": "CRDT Synchronization Layer",
+      "description": "Utilizes Yjs binary encoding over WebSockets to apply commutative text transformations without state divergence."
+    },
+    {
+      "name": "Code Runner Service",
+      "description": "Spawns sandboxed subshells with strict memory (128MB) and runtime limits (5000ms), capturing stdout and stderr."
+    }
+  ],
+  "databaseDesign": {
+    "databaseType": "Document & Cache (MongoDB / Redis)",
+    "description": "Stores saved code snippets, revision histories, and active room connection metadata.",
+    "tables": [
+      {
+        "name": "rooms",
+        "description": "Active and archived collaborative coding sessions.",
+        "primaryKey": "room_code (VARCHAR 8)",
+        "fields": ["room_code", "created_by", "language", "current_content", "created_at"]
+      },
+      {
+        "name": "execution_logs",
+        "description": "Audit trail of executed scripts and exit codes.",
+        "primaryKey": "id (UUID)",
+        "fields": ["id", "room_code", "language", "execution_time_ms", "exit_code", "timestamp"]
+      }
+    ]
+  },
+  "apis": [
+    {
+      "endpoint": "/api/v1/rooms/create",
+      "method": "POST",
+      "description": "Generates a unique 6-character room token and initializes editor document state.",
+      "responseSample": "{\n  \"room_code\": \"DEV-492\",\n  \"language\": \"javascript\",\n  \"websocket_url\": \"wss://api.example.com/ws/DEV-492\"\n}"
+    },
+    {
+      "endpoint": "/api/v1/execute",
+      "method": "POST",
+      "description": "Executes provided code in an isolated sandbox and returns standard output stream.",
+      "responseSample": "{\n  \"stdout\": \"Hello, World!\\nCalculated Fibonacci(10) = 55\\n\",\n  \"stderr\": \"\",\n  \"execution_time_ms\": 84,\n  \"exit_code\": 0\n}"
+    }
+  ],
+  "implementationGuide": [
+    {
+      "stepNumber": 1,
+      "title": "WebSocket Room Management in Node.js",
+      "instructions": "Set up a Socket.io server with room joins, peer presence broadcasts, and disconnect cleanup handlers.",
+      "codeSnippet": {
+        "language": "typescript",
+        "fileName": "socket-server.ts",
+        "code": "import { Server } from 'socket.io';\n\nexport function setupSocket(io: Server) {\n  io.on('connection', (socket) => {\n    socket.on('join-room', (roomId: string, username: string) => {\n      socket.join(roomId);\n      socket.to(roomId).emit('user-joined', { userId: socket.id, username });\n\n      socket.on('editor-change', (delta) => {\n        socket.to(roomId).emit('editor-change', delta);\n      });\n\n      socket.on('disconnect', () => {\n        socket.to(roomId).emit('user-left', socket.id);\n      });\n    });\n  });\n}"
+      }
+    },
+    {
+      "stepNumber": 2,
+      "title": "Monaco Editor Binding with Yjs Provider",
+      "instructions": "Connect React component state to Monaco editor instances, syncing CRDT updates seamlessly across all peers.",
+      "codeSnippet": {
+        "language": "typescript",
+        "fileName": "EditorComponent.tsx",
+        "code": "import React, { useRef, useEffect } from 'react';\nimport Editor from '@monaco-editor/react';\n\nexport const CollaborativeEditor = ({ roomId }: { roomId: string }) => {\n  const editorRef = useRef<any>(null);\n\n  const handleEditorDidMount = (editor: any) => {\n    editorRef.current = editor;\n    // Bind Monaco model to Yjs CRDT provider here\n  };\n\n  return (\n    <div style={{ height: '600px', border: '1px solid #1e293b' }}>\n      <Editor\n        height=\"100%\"\n        defaultLanguage=\"python\"\n        theme=\"vs-dark\"\n        onMount={handleEditorDidMount}\n      />\n    </div>\n  );\n};"
+      }
+    }
+  ],
+  "expectedOutput": "A fully functional web IDE accessible via unique URL slugs where two or more browser windows can concurrently edit code in real-time with zero text conflict artifacts, click 'Run Code', and inspect immediate execution outputs.",
+  "futureImprovements": [
+    "Add audio/video peer-to-peer WebRTC calling directly inside the coding workspace.",
+    "Integrate AI code completion suggestions via local LLM or OpenAI API streaming.",
+    "Support multi-file project trees and folder explorers."
+  ],
+  "interviewQuestions": [
+    {
+      "category": "Basic",
+      "question": "What is the difference between WebSockets and standard HTTP REST polling?",
+      "answer": "HTTP REST is unidirectional and request-driven: the client must continuously poll the server to discover updates, creating high HTTP header overhead and latency. WebSockets maintain a persistent, bidirectional, full-duplex TCP connection, allowing the server to push text mutations to clients in microseconds with minimal framing overhead."
+    },
+    {
+      "category": "Technical",
+      "question": "What is a CRDT (Conflict-Free Replicated Data Type), and how does it prevent text corruption?",
+      "answer": "A CRDT is a distributed data structure that guarantees eventual consistency across multiple nodes without requiring a central coordinator. Unlike naive Operational Transformation (OT) which requires complex server transformation matrices, CRDTs assign unique fractional identifiers and vector timestamps to every character inserted or deleted, ensuring all clients converge to the exact same text state regardless of packet arrival order."
+    },
+    {
+      "category": "Placement",
+      "question": "How did you prevent users from executing malicious code (like 'rm -rf /') in the code runner?",
+      "answer": "User code is never executed directly on the host operating system. It executes inside ephemeral Docker containers running with non-root user privileges, a read-only root filesystem, disabled network access (`--net=none`), CPU quotas (`--cpus=0.5`), memory limits (`--memory=128m`), and a strict process timeout kill signal."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can this project be hosted for free during portfolio demonstrations?",
+      "answer": "Yes. The Next.js/React frontend can be deployed on Vercel, and the Node.js WebSocket backend can be hosted on free tiers of Render or Railway."
+    }
+  ],
+  "relatedProjectSlugs": ["ai-resume-screener", "banking-microservices"],
+  "relatedBlogSlugs": ["best-spring-boot-projects-for-placements"],
+  "publishedAt": "2026-02-10T14:00:00Z",
+  "updatedAt": "2026-09-29T11:00:00Z",
+  "lastReviewedAt": "2026-10-02T18:00:00Z",
+  "author": {
+    "id": "rohit-sharma",
+    "name": "Rohit Sharma",
+    "role": "Principal Systems Architect & Placement Mentor",
+    "bio": "Former Staff Engineer at FinTech scaleups."
+  },
+  "reviewer": {
+    "id": "ananya-verma",
+    "name": "Ananya Verma",
+    "role": "Senior AI/ML Researcher & Curriculum Lead",
+    "bio": "AI practitioner specializing in NLP and recommendation pipelines."
+  },
+  "seo": {
+    "metaTitle": "Real-Time Collaborative Code Editor - Full-Stack React Project",
+    "metaDescription": "Build a real-time collaborative coding platform using React, TypeScript, Monaco Editor, and WebSockets. Complete architecture diagrams and interview prep."
+  }
+}

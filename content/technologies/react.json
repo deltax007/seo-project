@@ -1,0 +1,31 @@
+{
+  "id": "react",
+  "slug": "react",
+  "name": "React & Full-Stack",
+  "category": "web-development",
+  "categoryLabel": "Web & Full-Stack Development",
+  "description": "Component-driven frontend ecosystem and full-stack TypeScript architectures for real-time web applications, interactive dashboards, and cloud web clients.",
+  "icon": "layout",
+  "officialDocsUrl": "https://react.dev",
+  "featured": true,
+  "subTechnologies": ["Next.js", "Node.js", "TypeScript", "Tailwind CSS", "Redux Toolkit"],
+  "publishedAt": "2026-01-22T08:00:00Z",
+  "updatedAt": "2026-09-27T12:00:00Z",
+  "lastReviewedAt": "2026-10-01T15:00:00Z",
+  "author": {
+    "id": "rohit-sharma",
+    "name": "Rohit Sharma",
+    "role": "Principal Systems Architect & Placement Mentor",
+    "bio": "Former Staff Engineer at FinTech scaleups."
+  },
+  "reviewer": {
+    "id": "ananya-verma",
+    "name": "Ananya Verma",
+    "role": "Senior AI/ML Researcher & Curriculum Lead",
+    "bio": "AI practitioner specializing in NLP and recommendation pipelines."
+  },
+  "seo": {
+    "metaTitle": "React & MERN Stack Projects for Resume & Campus Placements",
+    "metaDescription": "Build full-stack React and Node.js projects with real-time WebSockets, state management, and modern component design for engineering placements."
+  }
+}

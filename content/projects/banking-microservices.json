@@ -1,0 +1,168 @@
+{
+  "id": "banking-microservices",
+  "slug": "banking-microservices",
+  "title": "Cloud-Native Banking & Transaction Engine",
+  "shortDescription": "Distributed FinTech backend implementing ACID-compliant fund transfers, idempotency keys, JWT role-based security, and event-driven audit logging with Spring Boot and PostgreSQL.",
+  "difficulty": "Advanced",
+  "projectTypes": ["Final Year", "Major", "Placement"],
+  "primaryTechnologySlug": "spring-boot",
+  "technologySlugs": ["spring-boot"],
+  "programmingLanguages": ["Java", "SQL"],
+  "domains": ["Fintech", "Cloud & Distributed Systems", "Banking"],
+  "skillsLearned": [
+    "Spring Boot 3 & Spring Data JPA",
+    "ACID Transaction Isolation & Pessimistic Locking",
+    "Idempotency Key Patterns in Financial APIs",
+    "JWT & Spring Security 6 Integration",
+    "PostgreSQL Relational Normalization",
+    "Docker Containerization & Health Probes"
+  ],
+  "problemStatement": "Financial systems cannot afford dirty reads, double-debit anomalies, or race conditions when concurrent requests attempt to withdraw from or transfer money between bank accounts simultaneously.",
+  "objectives": [
+    "Architect decoupled microservices for User Management, Account Balance Ledgers, and Transaction Auditing.",
+    "Enforce strict transaction boundaries using pessimistic write locks (`SELECT ... FOR UPDATE`) to prevent double-spending race conditions.",
+    "Implement idempotency keys for all mutating transfer endpoints to ensure network retries never result in duplicate financial deductions.",
+    "Secure all communication channels with stateless JWT authentication and role-based access control (RBAC)."
+  ],
+  "realWorldUseCase": "Core banking engines, digital wallet platforms (like Paytm / PhonePe architectures), inter-bank settlement gateways, and neobank ledger platforms.",
+  "architecture": {
+    "overview": "The system utilizes an API Gateway routing traffic to three distinct Spring Boot services: Auth Service (JWT issuance), Account Service (balance management with pessimistic locking), and Transaction Ledger Service (immutable audit trail). Database transactions execute at `SERIALIZABLE` or `READ_COMMITTED` with row-level locking on balance modifications.",
+    "diagramType": "ascii",
+    "diagramContent": "+-------------------------------------------------------------------------+\n|                         CLIENT / WEB DASHBOARD                          |\n+-------------------------------------------------------------------------+\n                                     |\n                                     | (HTTPS / Bearer Token)\n                                     v\n+-------------------------------------------------------------------------+\n|                         API GATEWAY & SECURITY                          |\n|           (Spring Cloud Gateway / Spring Security JWT Filter)           |\n+-------------------------------------------------------------------------+\n                 |                                         |\n                 v                                         v\n+----------------------------------+     +----------------------------------+\n|        ACCOUNT SERVICE           |     |     TRANSACTION AUDIT LEDGER     |\n| (Spring Boot 3 / Hibernate JPA)  |     |  (Append-Only Financial Records) |\n+----------------------------------+     +----------------------------------+\n                 |                                         |\n                 v                                         v\n+-------------------------------------------------------------------------+\n|                        POSTGRESQL REPOSITORY                            |\n|  - Accounts Table (Row-Level Pessimistic Locking: SELECT ... FOR UPDATE)|\n|  - Ledger Transactions (Immutable Double-Entry Bookkeeping)             |\n|  - Idempotency Keys Cache Table (24-Hour Expiry Window)                 |\n+-------------------------------------------------------------------------+"
+  },
+  "features": [
+    "Atomic double-entry transaction posting (Debit account A + Credit account B within single database transaction).",
+    "Row-level database locking preventing concurrent overdrawing in millisecond race conditions.",
+    "Idempotency key header enforcement preventing duplicate transaction executions on network timeout retries.",
+    "Stateless JWT authorization supporting CUSTOMER, AUDITOR, and ADMIN roles.",
+    "Containerized Docker Compose stack running Spring Boot, PostgreSQL, and pgAdmin."
+  ],
+  "modules": [
+    {
+      "name": "Auth & Identity Service",
+      "description": "Registers users, hashes passwords using BCrypt with salt rounds, and issues cryptographic JWT tokens with permission claims."
+    },
+    {
+      "name": "Account & Ledger Engine",
+      "description": "Validates balances, acquires row locks on account entities, performs arithmetic balance updates, and writes ledger entries."
+    },
+    {
+      "name": "Idempotency Filter",
+      "description": "Intercepts HTTP requests bearing `X-Idempotency-Key`, verifying if a previous execution has already processed or is pending."
+    }
+  ],
+  "databaseDesign": {
+    "databaseType": "Relational (PostgreSQL 16)",
+    "description": "Strict 3NF normalized schema with foreign key constraints, check constraints ensuring balances never fall below zero, and B-Tree indexes on account numbers.",
+    "tables": [
+      {
+        "name": "users",
+        "description": "Customer and administrative profiles.",
+        "primaryKey": "id (BIGSERIAL)",
+        "fields": ["id", "username", "email", "password_hash", "role", "created_at"]
+      },
+      {
+        "name": "accounts",
+        "description": "Financial ledger accounts with balance check constraints.",
+        "primaryKey": "account_number (VARCHAR 20)",
+        "fields": ["account_number", "user_id", "currency", "balance_cents", "status", "version"]
+      },
+      {
+        "name": "transactions",
+        "description": "Immutable ledger entries recording fund transfers.",
+        "primaryKey": "id (UUID)",
+        "fields": ["id", "source_account", "destination_account", "amount_cents", "idempotency_key", "timestamp", "status"]
+      }
+    ]
+  },
+  "apis": [
+    {
+      "endpoint": "/api/v1/auth/login",
+      "method": "POST",
+      "description": "Authenticates user and returns JWT bearer token.",
+      "responseSample": "{\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"expires_in\": 3600,\n  \"role\": \"CUSTOMER\"\n}"
+    },
+    {
+      "endpoint": "/api/v1/transfers",
+      "method": "POST",
+      "description": "Executes atomic fund transfer between accounts with required X-Idempotency-Key header.",
+      "responseSample": "{\n  \"transaction_id\": \"b086e3cb-33d3-49d7-84bc-5d9c735d648b\",\n  \"source_account\": \"ACC-100234\",\n  \"destination_account\": \"ACC-800412\",\n  \"amount\": 250.00,\n  \"status\": \"COMPLETED\"\n}"
+    }
+  ],
+  "implementationGuide": [
+    {
+      "stepNumber": 1,
+      "title": "Account Entity with Versioning & Balance Validation",
+      "instructions": "Define the JPA Account entity with `@Entity`, currency formatting stored in smallest currency units (cents/paise) to eliminate floating-point rounding errors.",
+      "codeSnippet": {
+        "language": "java",
+        "fileName": "Account.java",
+        "code": "@Entity\n@Table(name = \"accounts\")\npublic class Account {\n    @Id\n    private String accountNumber;\n\n    @Column(nullable = false)\n    private Long balanceCents;\n\n    @Version\n    private Long version;\n\n    public void debit(Long amount) {\n        if (this.balanceCents < amount) {\n            throw new InsufficientFundsException(\"Account has insufficient balance\");\n        }\n        this.balanceCents -= amount;\n    }\n\n    public void credit(Long amount) {\n        this.balanceCents += amount;\n    }\n}"
+      }
+    },
+    {
+      "stepNumber": 2,
+      "title": "Atomic Transfer Service with Row Locking",
+      "instructions": "Execute transfer inside `@Transactional` boundary, acquiring pessimistic write locks on both accounts ordered by account number to prevent database deadlocks.",
+      "codeSnippet": {
+        "language": "java",
+        "fileName": "TransferService.java",
+        "code": "@Service\npublic class TransferService {\n    @Autowired\n    private AccountRepository accountRepository;\n\n    @Transactional\n    public TransactionResult executeTransfer(String fromAcc, String toAcc, Long amount) {\n        // Order locks lexicographically to prevent deadlocks\n        String firstLock = fromAcc.compareTo(toAcc) < 0 ? fromAcc : toAcc;\n        String secondLock = fromAcc.compareTo(toAcc) < 0 ? toAcc : fromAcc;\n\n        Account source = accountRepository.findByAccountNumberForUpdate(fromAcc);\n        Account destination = accountRepository.findByAccountNumberForUpdate(toAcc);\n\n        source.debit(amount);\n        destination.credit(amount);\n\n        return new TransactionResult(UUID.randomUUID(), \"COMPLETED\");\n    }\n}"
+      }
+    }
+  ],
+  "expectedOutput": "A battle-tested Spring Boot microservice suite passing concurrency stress tests (e.g. 50 parallel transfer requests on the same account) with zero negative balance leaks, zero duplicate transactions, and full Swagger OpenAPI documentation.",
+  "futureImprovements": [
+    "Introduce Apache Kafka event stream to publish transaction events to external accounting ledgers asynchronously.",
+    "Implement the Saga Pattern with compensating transactions for distributed multi-datacenter transfers.",
+    "Integrate Prometheus and Grafana dashboards for transaction latency and JVM metrics."
+  ],
+  "interviewQuestions": [
+    {
+      "category": "Technical",
+      "question": "Why store monetary values in integers/cents rather than Double or Float?",
+      "answer": "Floating-point numbers in computer architectures cannot accurately represent decimal fractions in base-2 IEEE 754 standards (e.g., 0.1 + 0.2 = 0.30000000000000004). In banking systems, this causes roundoff discrepancy leaks over millions of transactions. We store monetary amounts in atomic integer units (cents/paise) or use Java's BigDecimal with explicit rounding modes."
+    },
+    {
+      "category": "Architecture",
+      "question": "What is pessimistic locking vs optimistic locking, and why did you choose it for balance transfers?",
+      "answer": "Optimistic locking checks version timestamps at commit time; if conflict occurs, an OptimisticLockException is thrown and the operation is rolled back. In high-contention banking scenarios (e.g. flash sales or concurrent billing), frequent rollbacks waste server cycles. Pessimistic locking (SELECT FOR UPDATE) blocks subsequent transactions directly in the database until the holding transaction finishes, guaranteeing transactional serialization."
+    },
+    {
+      "category": "Placement",
+      "question": "How did you prevent database deadlocks when two accounts transfer money to each other simultaneously?",
+      "answer": "Deadlocks occur when Thread A locks Account 1 and waits for Account 2, while Thread B locks Account 2 and waits for Account 1. We resolved this by enforcing global lock ordering: accounts are always locked in alphabetical/lexicographical order of their account IDs, breaking the circular wait condition required for deadlocks."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Is Spring Boot suitable for campus placement interviews at top product firms?",
+      "answer": "Yes. Enterprise backend roles at banks, fintechs, and product firms place heavy emphasis on Spring Boot, ACID transactions, database locking, and microservices architecture."
+    },
+    {
+      "question": "Can this project be run using Docker Compose?",
+      "answer": "Yes. A single `docker compose up` command starts PostgreSQL, initializes the schema, and starts the Spring Boot service container."
+    }
+  ],
+  "relatedProjectSlugs": ["ai-resume-screener", "collaborative-code-editor"],
+  "relatedBlogSlugs": ["best-spring-boot-projects-for-placements"],
+  "publishedAt": "2026-02-05T12:00:00Z",
+  "updatedAt": "2026-09-30T10:00:00Z",
+  "lastReviewedAt": "2026-10-02T16:00:00Z",
+  "author": {
+    "id": "rohit-sharma",
+    "name": "Rohit Sharma",
+    "role": "Principal Systems Architect & Placement Mentor",
+    "bio": "Former Staff Engineer at FinTech scaleups."
+  },
+  "reviewer": {
+    "id": "ananya-verma",
+    "name": "Ananya Verma",
+    "role": "Senior AI/ML Researcher & Curriculum Lead",
+    "bio": "AI practitioner specializing in NLP and recommendation pipelines."
+  },
+  "seo": {
+    "metaTitle": "Spring Boot Banking Microservices Project - Complete Placement Guide",
+    "metaDescription": "Build a secure banking engine with Spring Boot 3, PostgreSQL, ACID transactions, and pessimistic locking. Master core placement interview questions."
+  }
+}

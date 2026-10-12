@@ -1,0 +1,11 @@
+{
+  "id": "rohit-sharma",
+  "name": "Rohit Sharma",
+  "role": "Principal Systems Architect & Placement Mentor",
+  "bio": "Former Staff Engineer at FinTech scaleups with 12+ years of experience architecting distributed systems and mentoring engineering graduates on technical project interviews.",
+  "avatarUrl": "/assets/authors/rohit-sharma.png",
+  "socialLinks": {
+    "github": "https://github.com",
+    "linkedin": "https://linkedin.com"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "machine-learning",
+  "slug": "machine-learning",
+  "name": "Machine Learning & AI",
+  "category": "ai-ml",
+  "categoryLabel": "Artificial Intelligence",
+  "description": "Algorithmic foundation and neural models enabling predictive analytics, Natural Language Processing (NLP), computer vision, and generative intelligence.",
+  "icon": "cpu",
+  "officialDocsUrl": "https://scikit-learn.org/",
+  "featured": true,
+  "subTechnologies": ["Scikit-Learn", "PyTorch", "TensorFlow", "HuggingFace Transformers", "spaCy"],
+  "publishedAt": "2026-01-20T11:00:00Z",
+  "updatedAt": "2026-09-29T18:00:00Z",
+  "lastReviewedAt": "2026-10-02T10:00:00Z",
+  "author": {
+    "id": "ananya-verma",
+    "name": "Ananya Verma",
+    "role": "Senior AI/ML Researcher & Curriculum Lead",
+    "bio": "AI practitioner specializing in NLP and recommendation pipelines."
+  },
+  "reviewer": {
+    "id": "rohit-sharma",
+    "name": "Rohit Sharma",
+    "role": "Principal Systems Architect",
+    "bio": "Former Staff Engineer at FinTech scaleups."
+  },
+  "seo": {
+    "metaTitle": "AI & Machine Learning Projects for Final Year CSE Students",
+    "metaDescription": "Rigorous AI/ML academic projects covering NLP, deep learning, and predictive models. Complete with data pipelines, architectures, and viva interview questions."
+  }
+}
