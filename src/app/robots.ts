@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/'],
     },
-    sitemap: 'https://devprojects.io/sitemap.xml',
+    sitemap: 'https://seo-project-alpha.vercel.app/sitemap.xml',
   };
 }
