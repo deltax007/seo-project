@@ -4,7 +4,7 @@ import { getAllTechnologies } from '@/lib/content/technologies';
 import { getAllBlogArticles } from '@/lib/content/blogs';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://seo-project-alpha.vercel.app/';
+  const baseUrl = 'https://seo-project-alpha.vercel.app';
 
   const [projects, technologies, blogs] = await Promise.all([
     getAllProjects(),
