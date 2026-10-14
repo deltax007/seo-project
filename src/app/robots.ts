@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/'],
     },
-    sitemap: 'https://seo-project-alpha.vercel.app/sitemap.xml',
+    sitemap: 'https://www.cse-placement-project-guide.me/sitemap.xml',
   };
 }
