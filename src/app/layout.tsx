@@ -42,14 +42,22 @@ export default function RootLayout({
     <html lang="en">
       <Script id="google-tag-init" strategy="beforeInteractive">
         {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());`}
+window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});`}
       </Script>
       <Script
         src="https://www.googletagmanager.com/gtm.js?id=GTM-KV3MG39N"
         strategy="afterInteractive"
       />
       <body>
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-KV3MG39N"
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+            title="Google Tag Manager"
+          />
+        </noscript>
         <a href="#main-content" className="skip-to-content">
           Skip to main content
         </a>
