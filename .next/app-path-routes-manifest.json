@@ -1,0 +1,13 @@
+{
+  "/api/search/route": "/api/search",
+  "/robots.txt/route": "/robots.txt",
+  "/sitemap.xml/route": "/sitemap.xml",
+  "/_not-found/page": "/_not-found",
+  "/blog/page": "/blog",
+  "/blog/[slug]/page": "/blog/[slug]",
+  "/projects/page": "/projects",
+  "/projects/[slug]/page": "/projects/[slug]",
+  "/technologies/page": "/technologies",
+  "/technologies/[slug]/page": "/technologies/[slug]",
+  "/page": "/"
+}

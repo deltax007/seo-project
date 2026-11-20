@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
+// @ts-ignore CSS imports are processed by Next.js, not TypeScript.
 import '../styles/globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -38,6 +40,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Script id="google-tag-init" strategy="beforeInteractive">
+        {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());`}
+      </Script>
+      <Script
+        src="https://www.googletagmanager.com/gtm.js?id=GTM-KV3MG39N"
+        strategy="afterInteractive"
+      />
       <body>
         <a href="#main-content" className="skip-to-content">
           Skip to main content

@@ -1,4 +1,4 @@
-// File: C:\Users\omen\seo- project\src\app\blog\[slug]\page.tsx
+// File: C:\Users\omen\seo-git\seo-github\src\app\blog\[slug]\page.tsx
 import * as entry from '../../../../../src/app/blog/[slug]/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
