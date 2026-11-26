@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/technologies/layout,_N_T_/technologies/[slug]/layout,_N_T_/technologies/[slug]/page,_N_T_/technologies/python"
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/651e0b6a3067db361a156845094b2c5fa7286ff84d9cd4ffffd450d4bef172e4/$/technologies/python",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/technologies/[slug]/page"
+    },
+    "isFallback": false
+  }
+}
