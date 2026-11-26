@@ -6,7 +6,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://devprojects.io'),
+  metadataBase: new URL('https://www.cse-placement-project-guide.me/'),
   title: {
     template: '%s | DevProjects Platform',
     default: 'DevProjects | Engineering Project Platform for Computer Science Students',
