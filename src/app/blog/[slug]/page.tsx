@@ -10,6 +10,38 @@ import { ProjectCard } from '@/components/project/ProjectCard';
 import { Accordion } from '@/components/common/Accordion';
 import { generateBreadcrumbJsonLd, generateArticleJsonLd, generateFaqJsonLd } from '@/lib/seo/jsonld';
 
+function renderTextWithLinks(text: string): React.ReactNode {
+  const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = linkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const [, label, href] = match;
+    parts.push(
+      <a
+        key={`${match.index}-${href}`}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: 'underline', textUnderlineOffset: '3px' }}
+      >
+        {label}
+      </a>
+    );
+    lastIndex = linkRegex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
+}
+
 export async function generateStaticParams() {
   const articles = await getAllBlogArticles();
   return articles.map((a) => ({ slug: a.slug }));
@@ -202,14 +234,14 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                       color: 'var(--text-primary)',
                       fontStyle: 'italic',
                     }}>
-                      {paragraph.replace('> ', '')}
+                      {renderTextWithLinks(paragraph.replace('> ', ''))}
                     </blockquote>
                   );
                 }
                 if (paragraph === '---') {
                   return <hr key={idx} style={{ borderColor: 'var(--border-subtle)', margin: '1rem 0' }} />;
                 }
-                return <p key={idx}>{paragraph}</p>;
+                return <p key={idx}>{renderTextWithLinks(paragraph)}</p>;
               })}
             </div>
 
