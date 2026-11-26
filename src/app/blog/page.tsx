@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Engineering Placement & Final Year Project Guides | Blog',
   description: 'In-depth articles analyzing how to pick final-year CSE projects, crack placement technical project interviews, and design concurrent microservices.',
   alternates: {
-    canonical: 'https://devprojects.io/blog',
+    canonical: 'https://www.cse-placement-project-guide.me/blog',
   },
 };
 

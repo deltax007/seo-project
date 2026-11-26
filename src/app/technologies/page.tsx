@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'Technology Categories & Ecosystems | DevProjects',
   description: 'Explore engineering project pathways categorized by technology: AI/ML, Spring Boot, Python, React, Cloud, Databases, and Cybersecurity.',
   alternates: {
-    canonical: 'https://devprojects.io/technologies',
+    canonical: 'https://www.cse-placement-project-guide.me/technologies',
   },
 };
 

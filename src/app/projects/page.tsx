@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'Engineering Projects Catalog | Computer Science & Placement Guides',
   description: 'Explore verified, implementation-ready Computer Science projects. Filter by technology, difficulty, and project type (final year, placement, major, minor).',
   alternates: {
-    canonical: 'https://devprojects.io/projects',
+    canonical: 'https://www.cse-placement-project-guide.me/projects',
   },
 };
 
