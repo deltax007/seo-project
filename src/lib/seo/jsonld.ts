@@ -2,6 +2,59 @@ import { Project } from '../content/schemas/project';
 import { BlogArticle } from '../content/schemas/blog';
 import { FaqItem } from '../content/schemas/common';
 
+export const SITE_URL = 'https://www.cse-placement-project-guide.me';
+export const SITE_NAME = 'CSE Project Hub';
+
+function normalizeSiteUrl(siteUrl: string): string {
+  return siteUrl.replace(/\/+$/, '');
+}
+
+/**
+ * Generates standalone Organization JSON-LD structured data.
+ */
+export function generateOrganizationJsonLd(siteUrl: string = SITE_URL) {
+  const normalizedUrl = normalizeSiteUrl(siteUrl);
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${normalizedUrl}/#organization`,
+    name: SITE_NAME,
+    url: normalizedUrl,
+  };
+}
+
+/**
+ * Generates standalone WebSite JSON-LD structured data linked to Organization.
+ */
+export function generateWebSiteJsonLd(siteUrl: string = SITE_URL) {
+  const normalizedUrl = normalizeSiteUrl(siteUrl);
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${normalizedUrl}/#website`,
+    name: SITE_NAME,
+    url: normalizedUrl,
+    publisher: {
+      '@id': `${normalizedUrl}/#organization`,
+    },
+  };
+}
+
+/**
+ * Combines Organization and WebSite schemas into a single @graph for root layout rendering.
+ */
+export function generateSiteGraphJsonLd(siteUrl: string = SITE_URL) {
+  const { '@context': _orgContext, ...organization } = generateOrganizationJsonLd(siteUrl);
+  const { '@context': _webContext, ...website } = generateWebSiteJsonLd(siteUrl);
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [organization, website],
+  };
+}
+
 export function generateBreadcrumbJsonLd(items: { name: string; url: string }[]) {
   return {
     '@context': 'https://schema.org',
@@ -15,7 +68,9 @@ export function generateBreadcrumbJsonLd(items: { name: string; url: string }[])
   };
 }
 
-export function generateTechArticleJsonLd(project: Project, siteUrl: string = 'https://www.cse-placement-project-guide.me') {
+export function generateTechArticleJsonLd(project: Project, siteUrl: string = SITE_URL) {
+  const normalizedUrl = normalizeSiteUrl(siteUrl);
+
   return {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
@@ -31,18 +86,18 @@ export function generateTechArticleJsonLd(project: Project, siteUrl: string = 'h
       jobTitle: project.author.role,
     },
     publisher: {
-      '@type': 'Organization',
-      name: 'DevProjects Engineering Platform',
-      url: siteUrl,
+      '@id': `${normalizedUrl}/#organization`,
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${siteUrl}/projects/${project.slug}`,
+      '@id': `${normalizedUrl}/projects/${project.slug}`,
     },
   };
 }
 
-export function generateArticleJsonLd(blog: BlogArticle, siteUrl: string = 'https://www.cse-placement-project-guide.me') {
+export function generateArticleJsonLd(blog: BlogArticle, siteUrl: string = SITE_URL) {
+  const normalizedUrl = normalizeSiteUrl(siteUrl);
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -56,13 +111,11 @@ export function generateArticleJsonLd(blog: BlogArticle, siteUrl: string = 'http
       jobTitle: blog.author.role,
     },
     publisher: {
-      '@type': 'Organization',
-      name: 'DevProjects Engineering Platform',
-      url: siteUrl,
+      '@id': `${normalizedUrl}/#organization`,
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `${siteUrl}/blog/${blog.slug}`,
+      '@id': `${normalizedUrl}/blog/${blog.slug}`,
     },
   };
 }
@@ -82,18 +135,20 @@ export function generateFaqJsonLd(faqs: FaqItem[]) {
   };
 }
 
-export function generateAboutPageJsonLd(siteUrl: string = 'https://www.cse-placement-project-guide.me') {
+export function generateAboutPageJsonLd(siteUrl: string = SITE_URL) {
+  const normalizedUrl = normalizeSiteUrl(siteUrl);
+
   return {
     '@context': 'https://schema.org',
     '@type': 'AboutPage',
-    name: 'About DevProjects Engineering Platform',
-    description: 'Learn about DevProjects, an engineering project platform helping Computer Science and IT students build architecture-first final-year and placement projects.',
-    url: `${siteUrl}/about`,
+    name: `About ${SITE_NAME}`,
+    description: `Learn about ${SITE_NAME}, an engineering project platform helping Computer Science and IT students build architecture-first final-year and placement projects.`,
+    url: `${normalizedUrl}/about`,
+    isPartOf: {
+      '@id': `${normalizedUrl}/#website`,
+    },
     mainEntity: {
-      '@type': 'Organization',
-      name: 'DevProjects Engineering Platform',
-      url: siteUrl,
-      description: 'A technical project library and educational platform for Computer Science and IT students featuring system architectures, database schemas, REST API specs, and placement viva preparation.',
+      '@id': `${normalizedUrl}/#organization`,
     },
   };
 }

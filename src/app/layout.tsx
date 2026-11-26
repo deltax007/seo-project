@@ -4,6 +4,7 @@ import Script from 'next/script';
 import '../styles/globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { generateSiteGraphJsonLd } from '@/lib/seo/jsonld';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.cse-placement-project-guide.me/'),
@@ -38,6 +39,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const siteGraphJsonLd = generateSiteGraphJsonLd();
+
   return (
     <html lang="en">
       <Script id="google-tag-init" strategy="beforeInteractive">
@@ -49,6 +52,10 @@ window.dataLayer.push({'gtm.start': new Date().getTime(), event: 'gtm.js'});`}
         strategy="afterInteractive"
       />
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteGraphJsonLd) }}
+        />
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-KV3MG39N"
