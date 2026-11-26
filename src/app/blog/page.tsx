@@ -32,7 +32,7 @@ export default async function BlogIndexPage() {
 
         <div className="grid-2">
           {articles.map((article) => (
-            <BlogCard key={article.id} article={article} />
+            <BlogCard key={article.id} article={article} headingLevel="h2" />
           ))}
         </div>
       </div>

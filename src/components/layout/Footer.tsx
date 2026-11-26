@@ -51,9 +51,9 @@ export function Footer() {
 
           {/* Technologies Column */}
           <div>
-            <h4 style={{ fontSize: 'var(--text-sm)', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: '1rem' }}>
+            <p style={{ fontSize: 'var(--text-sm)', fontWeight: 700, lineHeight: 1.25, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: '1rem' }}>
               Technologies
-            </h4>
+            </p>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: 'var(--text-sm)' }}>
               <li><Link href="/technologies/machine-learning" style={{ color: 'var(--text-secondary)' }}>AI & Machine Learning</Link></li>
               <li><Link href="/technologies/spring-boot" style={{ color: 'var(--text-secondary)' }}>Spring Boot & Java</Link></li>
@@ -65,9 +65,9 @@ export function Footer() {
 
           {/* Project Types Column */}
           <div>
-            <h4 style={{ fontSize: 'var(--text-sm)', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: '1rem' }}>
+            <p style={{ fontSize: 'var(--text-sm)', fontWeight: 700, lineHeight: 1.25, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: '1rem' }}>
               Project Types
-            </h4>
+            </p>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: 'var(--text-sm)' }}>
               <li><Link href="/projects?type=Final+Year" style={{ color: 'var(--text-secondary)' }}>Final Year Projects</Link></li>
               <li><Link href="/projects?type=Placement" style={{ color: 'var(--text-secondary)' }}>Placement-Oriented Projects</Link></li>
@@ -79,9 +79,9 @@ export function Footer() {
 
           {/* Educational Resources Column */}
           <div>
-            <h4 style={{ fontSize: 'var(--text-sm)', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: '1rem' }}>
+            <p style={{ fontSize: 'var(--text-sm)', fontWeight: 700, lineHeight: 1.25, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-primary)', marginBottom: '1rem' }}>
               Editorial Guides
-            </h4>
+            </p>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: 'var(--text-sm)' }}>
               <li><Link href="/blog/best-spring-boot-projects-for-placements" style={{ color: 'var(--text-secondary)' }}>Spring Boot Placement Prep</Link></li>
               <li><Link href="/blog/how-to-choose-machine-learning-final-year-project" style={{ color: 'var(--text-secondary)' }}>How to Choose an ML Project</Link></li>

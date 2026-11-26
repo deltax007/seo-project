@@ -3,7 +3,16 @@ import Link from 'next/link';
 import { ArrowRight, Cpu, Server, Terminal, Layout, Database, Shield } from 'lucide-react';
 import { Technology } from '@/lib/content/schemas/technology';
 
-export function TechCard({ technology, projectCount }: { technology: Technology; projectCount?: number }) {
+export function TechCard({
+  technology,
+  projectCount,
+  headingLevel = 'h3',
+}: {
+  technology: Technology;
+  projectCount?: number;
+  headingLevel?: 'h2' | 'h3';
+}) {
+  const HeadingTag = headingLevel;
   const getIcon = (iconName: string) => {
     switch (iconName) {
       case 'cpu': return <Cpu size={22} />;
@@ -44,11 +53,11 @@ export function TechCard({ technology, projectCount }: { technology: Technology;
           </span>
         </div>
 
-        <h3 style={{ fontSize: 'var(--text-xl)', marginBottom: '0.5rem' }}>
+        <HeadingTag style={{ fontSize: 'var(--text-xl)', marginBottom: '0.5rem' }}>
           <Link href={`/technologies/${technology.slug}`} style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>
             {technology.name}
           </Link>
-        </h3>
+        </HeadingTag>
 
         <p style={{
           fontSize: 'var(--text-sm)',

@@ -144,7 +144,31 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
               gap: '1.5rem',
             }}>
               {article.content.split('\n\n').map((paragraph, idx) => {
+                if (paragraph.startsWith('#### ')) {
+                  return (
+                    <h4 key={idx} style={{
+                      fontSize: 'var(--text-lg)',
+                      color: 'var(--text-primary)',
+                      marginTop: '1rem',
+                      marginBottom: '0.35rem',
+                    }}>
+                      {paragraph.slice(5)}
+                    </h4>
+                  );
+                }
                 if (paragraph.startsWith('### ')) {
+                  return (
+                    <h3 key={idx} style={{
+                      fontSize: 'var(--text-xl)',
+                      color: 'var(--text-primary)',
+                      marginTop: '1.25rem',
+                      marginBottom: '0.4rem',
+                    }}>
+                      {paragraph.slice(4)}
+                    </h3>
+                  );
+                }
+                if (paragraph.startsWith('## ')) {
                   return (
                     <h2 key={idx} style={{
                       fontSize: 'var(--text-2xl)',
@@ -152,7 +176,19 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                       marginTop: '1.5rem',
                       marginBottom: '0.5rem',
                     }}>
-                      {paragraph.replace('### ', '')}
+                      {paragraph.slice(3)}
+                    </h2>
+                  );
+                }
+                if (paragraph.startsWith('# ')) {
+                  return (
+                    <h2 key={idx} style={{
+                      fontSize: 'var(--text-2xl)',
+                      color: 'var(--text-primary)',
+                      marginTop: '1.5rem',
+                      marginBottom: '0.5rem',
+                    }}>
+                      {paragraph.slice(2)}
                     </h2>
                   );
                 }
@@ -188,7 +224,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
                   <BookOpen size={20} color="var(--brand-primary)" />
-                  <h3 style={{ fontSize: 'var(--text-xl)' }}>Featured Implementation Project</h3>
+                  <h2 style={{ fontSize: 'var(--text-xl)' }}>Featured Implementation Project</h2>
                 </div>
                 <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
                   Want to build this yourself? Explore our verified project guide with full architectures, database designs, and code samples.
@@ -204,7 +240,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
             {/* FAQs */}
             {faqAccordionItems.length > 0 && (
               <div style={{ marginTop: '3.5rem' }}>
-                <h3 style={{ fontSize: 'var(--text-2xl)', marginBottom: '1.25rem' }}>Frequently Asked Questions</h3>
+                <h2 style={{ fontSize: 'var(--text-2xl)', marginBottom: '1.25rem' }}>Frequently Asked Questions</h2>
                 <Accordion items={faqAccordionItems} />
               </div>
             )}
@@ -220,9 +256,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
               gap: '1rem',
             }}>
               <div>
-                <h4 style={{ fontSize: 'var(--text-base)', marginBottom: '0.25rem', color: 'var(--text-primary)' }}>
+                <h2 style={{ fontSize: 'var(--text-base)', marginBottom: '0.25rem', color: 'var(--text-primary)' }}>
                   Written by {article.author.name}
-                </h4>
+                </h2>
                 <p style={{ fontSize: 'var(--text-xs)', color: 'var(--brand-primary)', marginBottom: '0.5rem' }}>
                   {article.author.role}
                 </p>

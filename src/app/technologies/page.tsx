@@ -38,7 +38,7 @@ export default async function TechnologiesPage() {
           {technologies.map((tech) => {
             const count = projects.filter(p => p.technologySlugs.includes(tech.slug) || p.primaryTechnologySlug === tech.slug).length;
             return (
-              <TechCard key={tech.id} technology={tech} projectCount={count} />
+              <TechCard key={tech.id} technology={tech} projectCount={count} headingLevel="h2" />
             );
           })}
         </div>

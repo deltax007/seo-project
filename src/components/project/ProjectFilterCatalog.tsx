@@ -10,10 +10,13 @@ import { ProjectCard } from './ProjectCard';
 export function ProjectFilterCatalog({
   initialProjects,
   technologies,
+  cardHeadingLevel = 'h2',
 }: {
   initialProjects: Project[];
   technologies: Technology[];
+  cardHeadingLevel?: 'h2' | 'h3';
 }) {
+  const EmptyHeadingTag = cardHeadingLevel;
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -240,7 +243,7 @@ export function ProjectFilterCatalog({
       {filteredProjects.length > 0 ? (
         <div className="grid-3">
           {filteredProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard key={project.id} project={project} headingLevel={cardHeadingLevel} />
           ))}
         </div>
       ) : (
@@ -251,7 +254,7 @@ export function ProjectFilterCatalog({
           border: '1px dashed var(--border-medium)',
           borderRadius: 'var(--radius-lg)',
         }}>
-          <h3 style={{ fontSize: 'var(--text-lg)', marginBottom: '0.5rem' }}>No projects match your current filters</h3>
+          <EmptyHeadingTag style={{ fontSize: 'var(--text-lg)', marginBottom: '0.5rem' }}>No projects match your current filters</EmptyHeadingTag>
           <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
             Try broadening your search term or resetting the technology and difficulty filters.
           </p>

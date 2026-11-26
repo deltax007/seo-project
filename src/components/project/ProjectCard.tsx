@@ -4,7 +4,14 @@ import { ArrowRight, Layers, CheckCircle2 } from 'lucide-react';
 import { Project } from '@/lib/content/schemas/project';
 import { Badge } from '../common/Badge';
 
-export function ProjectCard({ project }: { project: Project }) {
+export function ProjectCard({
+  project,
+  headingLevel = 'h3',
+}: {
+  project: Project;
+  headingLevel?: 'h2' | 'h3';
+}) {
+  const HeadingTag = headingLevel;
   const difficultyVariant = project.difficulty.toLowerCase() as 'beginner' | 'intermediate' | 'advanced';
 
   return (
@@ -35,14 +42,14 @@ export function ProjectCard({ project }: { project: Project }) {
         </div>
 
         {/* Project Title */}
-        <h3 style={{ fontSize: 'var(--text-xl)', marginBottom: '0.75rem', lineHeight: 1.35 }}>
+        <HeadingTag style={{ fontSize: 'var(--text-xl)', marginBottom: '0.75rem', lineHeight: 1.35 }}>
           <Link
             href={`/projects/${project.slug}`}
             style={{ color: 'var(--text-primary)', textDecoration: 'none' }}
           >
             {project.title}
           </Link>
-        </h3>
+        </HeadingTag>
 
         {/* Short Description */}
         <p style={{

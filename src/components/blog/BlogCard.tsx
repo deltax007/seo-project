@@ -3,7 +3,14 @@ import Link from 'next/link';
 import { ArrowRight, Clock, Calendar, User } from 'lucide-react';
 import { BlogArticle } from '@/lib/content/schemas/blog';
 
-export function BlogCard({ article }: { article: BlogArticle }) {
+export function BlogCard({
+  article,
+  headingLevel = 'h3',
+}: {
+  article: BlogArticle;
+  headingLevel?: 'h2' | 'h3';
+}) {
+  const HeadingTag = headingLevel;
   const formattedDate = new Date(article.publishedAt).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -31,11 +38,11 @@ export function BlogCard({ article }: { article: BlogArticle }) {
           </div>
         </div>
 
-        <h3 style={{ fontSize: 'var(--text-xl)', marginBottom: '0.75rem', lineHeight: 1.35 }}>
+        <HeadingTag style={{ fontSize: 'var(--text-xl)', marginBottom: '0.75rem', lineHeight: 1.35 }}>
           <Link href={`/blog/${article.slug}`} style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>
             {article.title}
           </Link>
-        </h3>
+        </HeadingTag>
 
         <p style={{
           fontSize: 'var(--text-sm)',

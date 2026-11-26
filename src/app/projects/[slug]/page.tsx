@@ -403,9 +403,9 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             {/* Sticky Sidebar Specs */}
             <aside style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
               <div className="card-base" style={{ position: 'sticky', top: '5.5rem' }}>
-                <h3 style={{ fontSize: 'var(--text-base)', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)', marginBottom: '1rem' }}>
+                <h2 style={{ fontSize: 'var(--text-base)', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--text-muted)', marginBottom: '1rem' }}>
                   Project Metadata
-                </h3>
+                </h2>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: 'var(--text-sm)' }}>
                   <div>
