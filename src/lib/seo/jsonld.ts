@@ -81,3 +81,19 @@ export function generateFaqJsonLd(faqs: FaqItem[]) {
     })),
   };
 }
+
+export function generateAboutPageJsonLd(siteUrl: string = 'https://www.cse-placement-project-guide.me') {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'About DevProjects Engineering Platform',
+    description: 'Learn about DevProjects, an engineering project platform helping Computer Science and IT students build architecture-first final-year and placement projects.',
+    url: `${siteUrl}/about`,
+    mainEntity: {
+      '@type': 'Organization',
+      name: 'DevProjects Engineering Platform',
+      url: siteUrl,
+      description: 'A technical project library and educational platform for Computer Science and IT students featuring system architectures, database schemas, REST API specs, and placement viva preparation.',
+    },
+  };
+}

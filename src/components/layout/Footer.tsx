@@ -85,6 +85,7 @@ export function Footer() {
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: 'var(--text-sm)' }}>
               <li><Link href="/blog/best-spring-boot-projects-for-placements" style={{ color: 'var(--text-secondary)' }}>Spring Boot Placement Prep</Link></li>
               <li><Link href="/blog/how-to-choose-machine-learning-final-year-project" style={{ color: 'var(--text-secondary)' }}>How to Choose an ML Project</Link></li>
+              <li><Link href="/about" style={{ color: 'var(--text-secondary)' }}>About DevProjects</Link></li>
               <li><Link href="/blog" style={{ color: 'var(--brand-primary)' }}>All Topic Clusters →</Link></li>
             </ul>
           </div>

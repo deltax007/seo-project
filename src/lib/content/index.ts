@@ -1,4 +1,5 @@
 export * from './schemas';
+export * from './authors';
 export * from './technologies';
 export * from './projects';
 export * from './blogs';

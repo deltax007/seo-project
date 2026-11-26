@@ -15,6 +15,7 @@ export function Header() {
     { label: 'Projects', href: '/projects' },
     { label: 'Technologies', href: '/technologies' },
     { label: 'Blog', href: '/blog' },
+    { label: 'About', href: '/about' },
   ];
 
   return (
@@ -62,13 +63,14 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav style={{ display: 'none', alignItems: 'center', gap: '2rem' }} className="desktop-nav">
+          <nav aria-label="Primary" style={{ display: 'none', alignItems: 'center', gap: '2rem' }} className="desktop-nav">
             {navLinks.map((link) => {
               const isActive = pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
+                  aria-current={isActive ? 'page' : undefined}
                   style={{
                     fontSize: 'var(--text-sm)',
                     fontWeight: 500,
@@ -177,21 +179,25 @@ export function Header() {
             flexDirection: 'column',
             gap: '1rem',
           }}>
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                style={{
-                  fontSize: 'var(--text-base)',
-                  fontWeight: 600,
-                  color: pathname.startsWith(link.href) ? 'var(--brand-primary)' : 'var(--text-primary)',
-                  textDecoration: 'none',
-                }}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname.startsWith(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive ? 'page' : undefined}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  style={{
+                    fontSize: 'var(--text-base)',
+                    fontWeight: 600,
+                    color: isActive ? 'var(--brand-primary)' : 'var(--text-primary)',
+                    textDecoration: 'none',
+                  }}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <Link
               href="/projects"
               onClick={() => setIsMobileMenuOpen(false)}

@@ -1,13 +1,14 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/api/search/route": "app/api/search/route.js",
-  "/sitemap.xml/route": "app/sitemap.xml/route.js",
   "/robots.txt/route": "app/robots.txt/route.js",
+  "/sitemap.xml/route": "app/sitemap.xml/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js",
+  "/about/page": "app/about/page.js",
   "/blog/page": "app/blog/page.js",
   "/projects/page": "app/projects/page.js",
-  "/technologies/page": "app/technologies/page.js",
   "/technologies/[slug]/page": "app/technologies/[slug]/page.js",
+  "/technologies/page": "app/technologies/page.js",
   "/blog/[slug]/page": "app/blog/[slug]/page.js",
-  "/page": "app/page.js",
   "/projects/[slug]/page": "app/projects/[slug]/page.js"
 }
