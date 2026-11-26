@@ -13,7 +13,6 @@ import {
   ShieldCheck,
   Terminal,
 } from 'lucide-react';
-import { getAllAuthors } from '@/lib/content/authors';
 import { getAllBlogArticles } from '@/lib/content/blogs';
 import { getAllProjects } from '@/lib/content/projects';
 import { getAllTechnologies } from '@/lib/content/technologies';
@@ -150,8 +149,55 @@ const architectureChain = [
   },
 ];
 
-function getInitials(name: string): string {
-  return name
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+}
+
+/**
+ * Edit the 5 team member boxes below with your custom names, roles, and info.
+ */
+const TEAM_MEMBERS: TeamMember[] = [
+  {
+    id: 'member-1',
+    name: '',
+    role: '',
+    bio: '',
+  },
+  {
+    id: 'member-2',
+    name: '',
+    role: '',
+    bio: '',
+  },
+  {
+    id: 'member-3',
+    name: '',
+    role: '',
+    bio: '',
+  },
+  {
+    id: 'member-4',
+    name: '',
+    role: '',
+    bio: '',
+  },
+  {
+    id: 'member-5',
+    name: '',
+    role: '',
+    bio: '',
+  },
+];
+
+function getInitials(name: string, index: number): string {
+  const trimmed = name.trim();
+  if (!trimmed) {
+    return String(index + 1).padStart(2, '0');
+  }
+  return trimmed
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
@@ -160,11 +206,10 @@ function getInitials(name: string): string {
 }
 
 export default async function AboutPage() {
-  const [projects, technologies, articles, authors] = await Promise.all([
+  const [projects, technologies, articles] = await Promise.all([
     getAllProjects(),
     getAllTechnologies(),
     getAllBlogArticles(),
-    getAllAuthors(),
   ]);
 
   const breadcrumbsJsonLd = generateBreadcrumbJsonLd([
@@ -184,7 +229,7 @@ export default async function AboutPage() {
     { label: 'Verified Project Guides', value: String(projects.length) },
     { label: 'Technology Ecosystems', value: String(technologies.length) },
     { label: 'Editorial Articles', value: String(articles.length) },
-    { label: 'Technical Contributors', value: String(authors.length) },
+    { label: 'Team Members', value: String(TEAM_MEMBERS.length) },
   ];
 
   return (
@@ -575,52 +620,83 @@ export default async function AboutPage() {
               </p>
             </div>
 
-            <div className="grid-2">
-              {authors.map((author) => (
-                <article
-                  key={author.id}
-                  className="card-base"
-                  style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start' }}
-                >
-                  <div
-                    aria-hidden="true"
+            <div className="grid-3">
+              {TEAM_MEMBERS.map((member, index) => {
+                const displayName = member.name.trim() || `Team Member ${index + 1}`;
+                const displayRole = member.role.trim() || 'Role / Specialization';
+                const displayBio = member.bio.trim();
+
+                return (
+                  <article
+                    key={member.id}
+                    className="card-base"
                     style={{
-                      width: '52px',
-                      height: '52px',
-                      borderRadius: 'var(--radius-full)',
-                      background:
-                        'linear-gradient(135deg, var(--brand-primary), var(--brand-secondary))',
-                      color: '#ffffff',
                       display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 700,
-                      fontSize: 'var(--text-base)',
-                      flexShrink: 0,
+                      flexDirection: 'column',
+                      gap: '1rem',
+                      minWidth: 0,
                     }}
                   >
-                    {getInitials(author.name)}
-                  </div>
-                  <div style={{ minWidth: 0 }}>
-                    <h3 style={{ fontSize: 'var(--text-lg)', marginBottom: '0.2rem' }}>
-                      {author.name}
-                    </h3>
-                    <p
-                      style={{
-                        fontSize: 'var(--text-xs)',
-                        color: 'var(--brand-primary)',
-                        fontWeight: 600,
-                        marginBottom: '0.65rem',
-                      }}
-                    >
-                      {author.role}
-                    </p>
-                    <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-                      {author.bio}
-                    </p>
-                  </div>
-                </article>
-              ))}
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                      <div
+                        aria-hidden="true"
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          borderRadius: 'var(--radius-full)',
+                          background:
+                            'linear-gradient(135deg, var(--brand-primary), var(--brand-secondary))',
+                          color: '#ffffff',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 700,
+                          fontSize: 'var(--text-sm)',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {getInitials(member.name, index)}
+                      </div>
+                      <div style={{ minWidth: 0 }}>
+                        <h3 style={{ fontSize: 'var(--text-lg)', marginBottom: '0.15rem' }}>
+                          {displayName}
+                        </h3>
+                        <p
+                          style={{
+                            fontSize: 'var(--text-xs)',
+                            color: 'var(--brand-primary)',
+                            fontWeight: 600,
+                          }}
+                        >
+                          {displayRole}
+                        </p>
+                      </div>
+                    </div>
+
+                    {displayBio ? (
+                      <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
+                        {displayBio}
+                      </p>
+                    ) : (
+                      <div
+                        style={{
+                          minHeight: '4.5rem',
+                          borderRadius: 'var(--radius-md)',
+                          border: '1px dashed var(--border-medium)',
+                          backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                          padding: '0.75rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
+                          Add team member bio &amp; details in TEAM_MEMBERS
+                        </span>
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
             </div>
 
             <div
