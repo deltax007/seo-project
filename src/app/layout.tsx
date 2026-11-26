@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://devprojects.io',
+    url: 'https://www.cse-placement-project-guide.me/',
     siteName: 'DevProjects Platform',
   },
   robots: {

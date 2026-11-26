@@ -15,7 +15,7 @@ export function generateBreadcrumbJsonLd(items: { name: string; url: string }[])
   };
 }
 
-export function generateTechArticleJsonLd(project: Project, siteUrl: string = 'https://devprojects.io') {
+export function generateTechArticleJsonLd(project: Project, siteUrl: string = 'https://www.cse-placement-project-guide.me') {
   return {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
@@ -42,7 +42,7 @@ export function generateTechArticleJsonLd(project: Project, siteUrl: string = 'h
   };
 }
 
-export function generateArticleJsonLd(blog: BlogArticle, siteUrl: string = 'https://devprojects.io') {
+export function generateArticleJsonLd(blog: BlogArticle, siteUrl: string = 'https://www.cse-placement-project-guide.me') {
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
