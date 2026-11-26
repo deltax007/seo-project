@@ -162,35 +162,36 @@ interface TeamMember {
 const TEAM_MEMBERS: TeamMember[] = [
   {
     id: 'member-1',
-    name: '',
-    role: '',
-    bio: '',
+    name: 'Archit Goswami',
+    role: 'Product Strategy & Site Architect',
+    bio: 'Defines audience focus, content strategy, and site architecture so every project guide solves real student challenges.',
   },
   {
     id: 'member-2',
-    name: '',
-    role: '',
-    bio: '',
+    name: 'Anshu Chauhan',
+    role: 'Content Structure & Quality Lead',
+    bio: 'Maps curriculum topics to structured guides and reviews deployment documentation for accuracy and academic alignment.',
   },
   {
     id: 'member-3',
-    name: '',
-    role: '',
-    bio: '',
+    name: 'Saatvik Goel',
+    role: 'Curriculum & Search Intent Lead',
+    bio: 'Researches student search trends and structures technical roadmaps to match B.Tech, BCA, and MCA project requirements.',
   },
   {
     id: 'member-4',
-    name: '',
-    role: '',
-    bio: '',
+    name: 'Siddhant Shahi',
+    role: 'Technical Benchmark & DNS Lead',
+    bio: 'Evaluates top industry benchmarks, manages domain and Cloudflare configurations, and compiles technical documentation.',
   },
   {
     id: 'member-5',
-    name: '',
-    role: '',
-    bio: '',
+    name: 'Shakti Chaudhary',
+    role: 'Cloud Infrastructure & Gap Analyst',
+    bio: 'Identifies missing industry topics in student resources and oversees VPS provisioning, hosting, and server workflows.',
   },
 ];
+
 
 function getInitials(name: string, index: number): string {
   const trimmed = name.trim();
