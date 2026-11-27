@@ -1,15 +1,15 @@
 {
+  "/_not-found/page": "/_not-found",
   "/api/search/route": "/api/search",
   "/robots.txt/route": "/robots.txt",
   "/sitemap.xml/route": "/sitemap.xml",
-  "/_not-found/page": "/_not-found",
-  "/blog/[slug]/page": "/blog/[slug]",
   "/authors/[id]/page": "/authors/[id]",
-  "/projects/page": "/projects",
-  "/about/page": "/about",
   "/blog/page": "/blog",
+  "/about/page": "/about",
+  "/projects/page": "/projects",
   "/technologies/page": "/technologies",
+  "/projects/[slug]/page": "/projects/[slug]",
   "/technologies/[slug]/page": "/technologies/[slug]",
-  "/page": "/",
-  "/projects/[slug]/page": "/projects/[slug]"
+  "/blog/[slug]/page": "/blog/[slug]",
+  "/page": "/"
 }
