@@ -37,6 +37,7 @@
   },
   "seo": {
     "metaTitle": "Best Spring Boot Projects for Campus Placements in 2026",
-    "metaDescription": "Learn which Spring Boot projects impress recruiters in technical placement rounds. Avoid generic CRUD and build concurrent, production-grade microservices."
+    "metaDescription": "Learn which Spring Boot projects impress recruiters in technical placement rounds. Avoid generic CRUD and build concurrent, production-grade microservices.",
+    "ogImage": "/images/blog/best-spring-boot-projects-for-placements.jpg"
   }
 }

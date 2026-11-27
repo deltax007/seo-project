@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/authors/layout,_N_T_/authors/[id]/layout,_N_T_/authors/[id]/page,_N_T_/authors/rohit-sharma"
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/ea496678bcd4467ac3489e3e529fd49b41ea8c1453f1a50c6e8f90df54582eb3/$/authors/rohit-sharma",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/authors/[id]/page"
+    },
+    "isFallback": false
+  }
+}

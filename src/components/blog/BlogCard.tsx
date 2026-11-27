@@ -68,8 +68,13 @@ export function BlogCard({
         color: 'var(--text-muted)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <User size={13} color="var(--brand-primary)" />
-          <span>{article.author.name}</span>
+          <User size={13} color="var(--brand-primary)" aria-hidden="true" />
+          <Link
+            href={`/authors/${article.author.id}`}
+            style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}
+          >
+            {article.author.name}
+          </Link>
         </div>
         <Link
           href={`/blog/${article.slug}`}

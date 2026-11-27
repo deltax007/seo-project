@@ -8,7 +8,7 @@ import { getProjectBySlug } from '@/lib/content/projects';
 import { Breadcrumbs } from '@/components/common/Breadcrumbs';
 import { ProjectCard } from '@/components/project/ProjectCard';
 import { Accordion } from '@/components/common/Accordion';
-import { generateBreadcrumbJsonLd, generateArticleJsonLd, generateFaqJsonLd } from '@/lib/seo/jsonld';
+import { generateBreadcrumbJsonLd, generateArticleJsonLd, generateFaqJsonLd, toAbsoluteSiteUrl } from '@/lib/seo/jsonld';
 
 function renderTextWithLinks(text: string): React.ReactNode {
   const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
@@ -52,6 +52,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const article = await getBlogArticleBySlug(slug);
   if (!article) return {};
 
+  const ogImageUrl = article.seo.ogImage ? toAbsoluteSiteUrl(article.seo.ogImage) : undefined;
+
   return {
     title: article.seo.metaTitle,
     description: article.seo.metaDescription,
@@ -65,6 +67,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       publishedTime: article.publishedAt,
       modifiedTime: article.updatedAt,
       authors: [article.author.name],
+      ...(ogImageUrl ? { images: [{ url: ogImageUrl, width: 1376, height: 768, alt: article.title }] } : {}),
     },
   };
 }
@@ -149,19 +152,63 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
                 color: 'var(--text-muted)',
               }}>
                 <div>
-                  By <strong style={{ color: 'var(--text-primary)' }}>{article.author.name}</strong> ({article.author.role})
+                  By{' '}
+                  <Link
+                    href={`/authors/${article.author.id}`}
+                    style={{
+                      color: 'var(--text-primary)',
+                      fontWeight: 700,
+                      textDecoration: 'underline',
+                      textUnderlineOffset: '3px',
+                    }}
+                  >
+                    {article.author.name}
+                  </Link>{' '}
+                  ({article.author.role})
                 </div>
                 {article.reviewer && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                    <ShieldCheck size={14} color="var(--brand-secondary)" />
-                    <span>Reviewed by {article.reviewer.name}</span>
+                    <ShieldCheck size={14} color="var(--brand-secondary)" aria-hidden="true" />
+                    <span>
+                      Reviewed by{' '}
+                      <Link
+                        href={`/authors/${article.reviewer.id}`}
+                        style={{
+                          color: 'var(--text-primary)',
+                          fontWeight: 600,
+                          textDecoration: 'underline',
+                          textUnderlineOffset: '3px',
+                        }}
+                      >
+                        {article.reviewer.name}
+                      </Link>
+                    </span>
                   </div>
                 )}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                  <Calendar size={13} />
+                  <Calendar size={13} aria-hidden="true" />
                   <span>{new Date(article.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                 </div>
               </div>
+
+              {article.seo.ogImage && (
+                <div style={{
+                  marginTop: '1.75rem',
+                  borderRadius: 'var(--radius-xl)',
+                  overflow: 'hidden',
+                  border: '1px solid var(--border-subtle)',
+                  backgroundColor: 'var(--bg-surface)',
+                }}>
+                  <img
+                    src={article.seo.ogImage}
+                    alt={article.title}
+                    width={1376}
+                    height={768}
+                    fetchPriority="high"
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                  />
+                </div>
+              )}
             </header>
 
             {/* Article Body */}
@@ -289,14 +336,34 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
             }}>
               <div>
                 <h2 style={{ fontSize: 'var(--text-base)', marginBottom: '0.25rem', color: 'var(--text-primary)' }}>
-                  Written by {article.author.name}
+                  Written by{' '}
+                  <Link
+                    href={`/authors/${article.author.id}`}
+                    style={{ color: 'var(--text-primary)', textDecoration: 'underline', textUnderlineOffset: '3px' }}
+                  >
+                    {article.author.name}
+                  </Link>
                 </h2>
                 <p style={{ fontSize: 'var(--text-xs)', color: 'var(--brand-primary)', marginBottom: '0.5rem' }}>
                   {article.author.role}
                 </p>
-                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '0.75rem' }}>
                   {article.author.bio}
                 </p>
+                <Link
+                  href={`/authors/${article.author.id}`}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    fontSize: 'var(--text-xs)',
+                    fontWeight: 600,
+                    color: 'var(--brand-primary)',
+                  }}
+                >
+                  View author profile
+                  <ArrowRight size={13} aria-hidden="true" />
+                </Link>
               </div>
             </div>
           </article>

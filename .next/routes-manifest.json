@@ -20,6 +20,14 @@
   },
   "dynamicRoutes": [
     {
+      "page": "/authors/[id]",
+      "regex": "^/authors/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/authors/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/blog/[slug]",
       "regex": "^/blog/([^/]+?)(?:/)?$",
       "routeKeys": {

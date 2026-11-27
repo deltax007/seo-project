@@ -2,14 +2,16 @@ import { MetadataRoute } from 'next';
 import { getAllProjects } from '@/lib/content/projects';
 import { getAllTechnologies } from '@/lib/content/technologies';
 import { getAllBlogArticles } from '@/lib/content/blogs';
+import { getAllAuthors } from '@/lib/content/authors';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.cse-placement-project-guide.me';
 
-  const [projects, technologies, blogs] = await Promise.all([
+  const [projects, technologies, blogs, authors] = await Promise.all([
     getAllProjects(),
     getAllTechnologies(),
     getAllBlogArticles(),
+    getAllAuthors(),
   ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -66,5 +68,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...projectRoutes, ...techRoutes, ...blogRoutes];
+  const authorRoutes: MetadataRoute.Sitemap = authors.map(a => ({
+    url: `${baseUrl}/authors/${a.id}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }));
+
+  return [...staticRoutes, ...projectRoutes, ...techRoutes, ...blogRoutes, ...authorRoutes];
 }

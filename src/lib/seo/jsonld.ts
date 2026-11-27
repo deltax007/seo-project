@@ -1,12 +1,21 @@
 import { Project } from '../content/schemas/project';
 import { BlogArticle } from '../content/schemas/blog';
-import { FaqItem } from '../content/schemas/common';
+import { Author, FaqItem } from '../content/schemas/common';
 
 export const SITE_URL = 'https://www.cse-placement-project-guide.me';
 export const SITE_NAME = 'CSE Project Hub';
 
 function normalizeSiteUrl(siteUrl: string): string {
   return siteUrl.replace(/\/+$/, '');
+}
+
+export function toAbsoluteSiteUrl(pathOrUrl: string, siteUrl: string = SITE_URL): string {
+  if (/^https?:\/\//i.test(pathOrUrl)) {
+    return pathOrUrl;
+  }
+  const normalizedSite = normalizeSiteUrl(siteUrl);
+  const normalizedPath = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`;
+  return `${normalizedSite}${normalizedPath}`;
 }
 
 /**
@@ -97,18 +106,23 @@ export function generateTechArticleJsonLd(project: Project, siteUrl: string = SI
 
 export function generateArticleJsonLd(blog: BlogArticle, siteUrl: string = SITE_URL) {
   const normalizedUrl = normalizeSiteUrl(siteUrl);
+  const imageUrl = blog.seo.ogImage
+    ? toAbsoluteSiteUrl(blog.seo.ogImage, normalizedUrl)
+    : undefined;
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: blog.title,
     description: blog.excerpt,
+    ...(imageUrl ? { image: imageUrl } : {}),
     datePublished: blog.publishedAt,
     dateModified: blog.updatedAt,
     author: {
       '@type': 'Person',
       name: blog.author.name,
       jobTitle: blog.author.role,
+      url: `${normalizedUrl}/authors/${blog.author.id}`,
     },
     publisher: {
       '@id': `${normalizedUrl}/#organization`,
@@ -116,6 +130,34 @@ export function generateArticleJsonLd(blog: BlogArticle, siteUrl: string = SITE_
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': `${normalizedUrl}/blog/${blog.slug}`,
+    },
+  };
+}
+
+export function generateProfilePageJsonLd(
+  author: Author,
+  avatarUrl?: string | null,
+  siteUrl: string = SITE_URL
+) {
+  const normalizedUrl = normalizeSiteUrl(siteUrl);
+  const sameAs = author.socialLinks
+    ? Object.values(author.socialLinks).filter((value): value is string => Boolean(value))
+    : [];
+  const absoluteAvatar = avatarUrl ? toAbsoluteSiteUrl(avatarUrl, normalizedUrl) : undefined;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    url: `${normalizedUrl}/authors/${author.id}`,
+    mainEntity: {
+      '@type': 'Person',
+      '@id': `${normalizedUrl}/authors/${author.id}#person`,
+      name: author.name,
+      jobTitle: author.role,
+      description: author.bio,
+      url: `${normalizedUrl}/authors/${author.id}`,
+      ...(absoluteAvatar ? { image: absoluteAvatar } : {}),
+      ...(sameAs.length > 0 ? { sameAs } : {}),
     },
   };
 }
