@@ -313,9 +313,19 @@ export default async function AboutPage() {
                 }}
               >
                 DevProjects is a technical project library and educational publication for Computer
-                Science and IT students. We bridge the gap between university project requirements
-                and real software engineering standards—providing structured architectures, database
-                designs, API contracts, and interview preparation instead of shallow project lists.
+                Science and IT students. We bridge the gap between university project
+                requirements—such as those outlined in the{' '}
+                <a
+                  href="https://csed.acm.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: 'underline', textUnderlineOffset: '3px' }}
+                >
+                  ACM/IEEE Computer Science Curricula
+                </a>
+                —and real software engineering standards, providing structured architectures,
+                database designs, API contracts, and interview preparation instead of shallow
+                project lists.
               </p>
 
               {/* Live Platform Inventory Strip */}

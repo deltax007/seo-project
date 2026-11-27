@@ -301,7 +301,16 @@ export default async function HomePage() {
             </span>
             <h2 style={{ marginTop: '0.4rem', marginBottom: '0.75rem' }}>Why We Are Not Another &quot;Project Ideas&quot; Website</h2>
             <p style={{ color: 'var(--text-secondary)' }}>
-              Generic listicle blogs give you bullet points. We give you engineering guides that teach you how systems actually function.
+              Generic listicle blogs give you bullet points. We give you engineering guides that teach you how systems actually function, reinforcing core design concepts from{' '}
+              <a
+                href="https://ocw.mit.edu/courses/6-033-computer-system-engineering-spring-2018/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'underline', textUnderlineOffset: '3px' }}
+              >
+                MIT Computer System Engineering
+              </a>
+              .
             </p>
           </div>
 
